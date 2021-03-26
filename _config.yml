@@ -103,7 +103,7 @@ theme: hexo-theme-yilia
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://mcwj007:git123567@github.com/mcwj007/mcwj007.github.io.git
+  repo: git@github.com:mcwj007/mcwj007.github.io.git
   branch: master
 
 #Litten Theme 模块缺少问题解决

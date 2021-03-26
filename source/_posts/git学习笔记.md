@@ -375,7 +375,66 @@ deploy:
   repo: https://heima04:heima123456@github.com/heima04/heima04.github.io.git
 ```
 
-上面的配置选项中，一定要注意在 repo 中按照对应的格式加入 Github 用户名和密码。
+​	上面的配置选项中，一定要注意在 repo 中按照对应的格式加入 Github 用户名和密码。或者直接填仓库地址，每次重新部署时手动输入账号密码。
+
++ 若上面的 repo 不想暴露git的用户名和密码可以采用ssh验证的方式，步骤如下：
+
+  1 、在创建的 blog 文件夹中右键点击`Git Bash Here` ,输入`cd ~/.ssh`  ,然后再输入`ls`,如下图所示说明已经存在 id_rsa.pub 或 id_dsa.pub 文件，则可以跳过步骤2
+
+  ```bash
+  PC@WJPC MINGW64 ~/Desktop/blog (master)
+  $ cd ~/.ssh
+  
+  PC@WJPC MINGW64 ~/.ssh
+  $ ls
+  id_rsa  id_rsa.pub  known_hosts
+  ```
+
+  2、 创建一个 SSH key，输入`ssh-keygen -t rsa -C "你的邮箱"`,然后连续回车
+
+  ```bash
+  PC@WJPC MINGW64 ~/.ssh
+  $ ssh-keygen -t rsa -C "244227697@qq.com"
+  Generating public/private rsa key pair.
+  Enter file in which to save the key (/c/Users/PC/.ssh/id_rsa):
+  /c/Users/PC/.ssh/id_rsa already exists.
+  Overwrite (y/n)?
+  ```
+
+  3、 输入`eval "$(ssh-agent -s)"`，添加密钥到ssh-agent,然后输入`ssh-add ~/.ssh/id_rsa`
+
+  ```bash
+  PC@WJPC MINGW64 ~/.ssh
+  $ eval "$(ssh-agent -s)"
+  Agent pid 1881
+  
+  PC@WJPC MINGW64 ~/.ssh
+  $ ssh-add ~/.ssh/id_rsa
+  Identity added: /c/Users/PC/.ssh/id_rsa (/c/Users/PC/.ssh/id_rsa)
+  ```
+
+  4、 打开github个人中心的`Settings-->SSH and GPG keys`,创建SSH key，title 随便取名，key 的内容为～/.ssh/id_rsa.pub文件的内容，复制进去即可。
+
+  {% asset_img c1.png create ssh %}
+
+  {% asset_img c2.png finished %}
+
+  5、通过 `ssh -T git@github.com` 命令验证是否添加成功，成功后返回信息如下
+
+  ```bash
+  PC@WJPC MINGW64 ~/.ssh
+  $ ssh -T git@github.com
+  Hi mcwj007! You've successfully authenticated, but GitHub does not provide shell access.
+  ```
+
+  6、修改 `_config.yml` 配置文件，其中repo为git仓库的 ssh 地址
+
+  ```yml
+  deploy:
+    type: git
+    repo: git@github.com:mcwj007/mcwj007.github.io.git
+    branch: master
+  ```
 
 第二：安装自动发布的插件：
 
